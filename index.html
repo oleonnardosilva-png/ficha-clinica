@@ -1,0 +1,787 @@
+<!doctype html>
+<html><head><meta charset="utf8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ficha da Clínica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,560;9..144,650&amp;family=Public+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>
+  :root{
+    --bg:#F4F7F6; --surface:#FFFFFF; --surface-2:#EAF1EF;
+    --ink:#172623; --ink-soft:#55655F; --ink-faint:#8A9994;
+    --border:#DAE4E1; --border-soft:#E7EFED;
+    --accent:#0F6E63; --accent-ink:#0B4F47; --accent-soft:#DDEDE9;
+    --warn:#B5731E; --warn-soft:#F6E7D4;
+    --good:#2E7D4F; --good-soft:#E1F0E5;
+    --shadow: 0 1px 2px rgba(23,38,35,.04), 0 8px 24px -12px rgba(23,38,35,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#101715; --surface:#161F1C; --surface-2:#1C2723;
+      --ink:#EAF3EF; --ink-soft:#A9BBB5; --ink-faint:#6D7E78;
+      --border:#28362F; --border-soft:#212D27;
+      --accent:#33B2A1; --accent-ink:#8FE1D3; --accent-soft:#1E332E;
+      --warn:#E3A75A; --warn-soft:#33291A;
+      --good:#5FC087; --good-soft:#1B3324;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#101715; --surface:#161F1C; --surface-2:#1C2723;
+    --ink:#EAF3EF; --ink-soft:#A9BBB5; --ink-faint:#6D7E78;
+    --border:#28362F; --border-soft:#212D27;
+    --accent:#33B2A1; --accent-ink:#8FE1D3; --accent-soft:#1E332E;
+    --warn:#E3A75A; --warn-soft:#33291A;
+    --good:#5FC087; --good-soft:#1B3324;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  html{background:var(--bg);}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Public Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+    font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased;
+    padding-inline:16px;
+  }
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif; text-wrap:balance; margin:0;}
+  .wrap{max-width:640px; margin:0 auto; padding-block:18px 120px;}
+
+  /* ---------- top ---------- */
+  .top{padding-block:6px 18px;}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--accent-ink); font-weight:500;
+  }
+  .title{font-size:26px; font-weight:560; color:var(--ink); margin-top:4px;}
+  .subtitle{color:var(--ink-soft); font-size:14px; margin-top:8px; max-width:52ch;}
+
+  .progress-row{display:flex; align-items:center; gap:10px; margin-top:18px;}
+  .progress-track{flex:1; height:7px; border-radius:99px; background:var(--border-soft); overflow:hidden;}
+  .progress-fill{height:100%; background:var(--accent); border-radius:99px; transition:width .4s ease;}
+  .progress-label{
+    font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-soft);
+    white-space:nowrap; font-variant-numeric:tabular-nums;
+  }
+
+  .rule-box{
+    display:flex; gap:12px; align-items:flex-start;
+    background:var(--accent-soft); border:1px solid var(--border);
+    border-radius:14px; padding:14px 16px; margin-top:18px;
+  }
+  .rule-box svg{flex:none; margin-top:2px; color:var(--accent-ink);}
+  .rule-box p{margin:0; font-size:13.5px; color:var(--ink); line-height:1.5;}
+  .rule-box strong{color:var(--accent-ink);}
+
+  /* ---------- section cards ---------- */
+  .section{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:22px; margin-top:16px; box-shadow:var(--shadow);
+  }
+  .section-head{display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;}
+  .section-num{
+    font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-faint);
+    border:1px solid var(--border); border-radius:8px; padding:3px 7px; line-height:1.4;
+    flex:none; margin-top:2px;
+  }
+  .section-titles{flex:1; min-width:0;}
+  .section-titles h2{font-size:18px; font-weight:560;}
+  .who{
+    display:inline-flex; align-items:center; gap:5px; margin-top:6px;
+    font-size:11.5px; font-weight:600; color:var(--ink-soft);
+    background:var(--surface-2); border-radius:99px; padding:3px 10px;
+  }
+  .help{font-size:13px; color:var(--ink-soft); margin:2px 0 14px;}
+  .example{font-size:12.5px; color:var(--ink-faint); margin-top:6px; font-style:italic;}
+
+  label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:5px;}
+  input[type=text], input[type=number], input[type=time], textarea, select{
+    width:100%; font:inherit; font-size:14.5px; color:var(--ink);
+    background:var(--bg); border:1px solid var(--border); border-radius:10px;
+    padding:9px 11px; margin-bottom:12px; transition:border-color .15s;
+  }
+  input:focus, textarea:focus, select:focus{outline:none; border-color:var(--accent);}
+  textarea{resize:vertical; min-height:70px; font-family:inherit;}
+  .field{margin-bottom:0;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .grid3{display:grid; grid-template-columns:1.4fr 1fr .9fr; gap:10px;}
+  @media (max-width:480px){ .grid3{grid-template-columns:1fr;} }
+
+  .row-card{
+    border:1px solid var(--border-soft); border-radius:12px; padding:14px;
+    background:var(--surface-2); margin-bottom:10px; position:relative;
+  }
+  .row-remove{
+    position:absolute; top:10px; right:10px; width:24px; height:24px; border-radius:7px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-soft);
+    font-size:14px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .row-remove:hover{background:var(--warn-soft); color:var(--warn); border-color:var(--warn);}
+
+  .btn-add{
+    font-family:"Public Sans"; font-size:13.5px; font-weight:600; color:var(--accent-ink);
+    background:var(--accent-soft); border:1px solid var(--border); border-radius:10px;
+    padding:8px 14px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-add:hover{filter:brightness(0.97);}
+
+  .day-row{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-soft);}
+  .day-row:last-child{border-bottom:none;}
+  .day-name{width:64px; font-size:13.5px; font-weight:600; flex:none;}
+  .day-times{display:flex; align-items:center; gap:6px; flex:1;}
+  .day-times input[type=time]{margin-bottom:0; width:auto; flex:1;}
+  .day-closed-label{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); font-weight:500; flex:none; margin:0;}
+  .day-closed-label input{margin:0; accent-color:var(--accent);}
+  .closed-tag{font-size:12.5px; color:var(--ink-faint); font-style:italic;}
+
+  .radio-opt{
+    display:flex; align-items:flex-start; gap:8px; padding:10px 12px; margin-bottom:8px;
+    border:1px solid var(--border); border-radius:10px; cursor:pointer; font-size:13.5px;
+  }
+  .radio-opt input{margin-top:2px; accent-color:var(--accent);}
+  .radio-opt.active{border-color:var(--accent); background:var(--accent-soft);}
+
+  /* ---------- sticky save bar ---------- */
+  .savebar{
+    position:fixed; left:0; right:0; bottom:0; z-index:20;
+    display:flex; justify-content:center; padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top, var(--bg) 60%, transparent);
+    pointer-events:none;
+  }
+  .savebar-inner{
+    pointer-events:auto; max-width:640px; width:100%;
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    box-shadow:var(--shadow); padding:10px 12px; display:flex; align-items:center; gap:10px;
+  }
+  .save-status{flex:1; min-width:0; font-size:12px; color:var(--ink-soft);}
+  .save-status .ts{font-family:"IBM Plex Mono",monospace; color:var(--ink);}
+  .btn-save{
+    font-family:"Public Sans"; font-weight:700; font-size:14px; color:#fff;
+    background:var(--accent); border:none; border-radius:10px; padding:11px 18px;
+    cursor:pointer; white-space:nowrap; flex:none;
+  }
+  .btn-save:active{filter:brightness(.92);}
+  .btn-save:disabled{opacity:.55; cursor:default;}
+  .btn-save.saved{background:var(--good);}
+
+  [hidden]{display:none!important;}
+</style>
+
+<div class="wrap">
+
+  <div class="top">
+    <div class="eyebrow">Ficha de configuração · Clínica</div>
+    <h1 class="title" id="nome-clinica-titulo">Dados da clínica</h1>
+    <p class="subtitle">Preencha aos poucos, do celular ou do computador — o que você salvar fica guardado. Pode dividir entre a recepção e o médico: cada um preenche a parte que sabe melhor.</p>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width: 0%;"></div></div>
+      <div class="progress-label" id="progress-label">0 de 13 seções</div>
+    </div>
+    <div class="rule-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path></svg>
+      <p><strong>Regra de ouro:</strong> a inteligência artificial que atende no WhatsApp nunca inventa uma resposta. Se um campo abaixo ficar em branco, ela simplesmente diz "deixa eu confirmar com a equipe" em vez de arriscar. Preencher com cuidado é o que evita isso.</p>
+    </div>
+  </div>
+
+  <!-- 1. Identidade -->
+  <section class="section" data-section="identidade">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <div class="section-titles">
+        <h2>Identidade da clínica</h2>
+        <span class="who">🗂️ Recepção</span>
+      </div>
+    </div>
+    <p class="help">O nome e o tom de voz aparecem em toda conversa que a IA tiver com um paciente.</p>
+    <label for="f-nome">Nome da clínica</label>
+    <input type="text" id="f-nome" placeholder="Ex.: Clínica Vida Plena">
+    <label for="f-tom">Tom de voz desejado</label>
+    <textarea id="f-tom" placeholder="Como a clínica quer soar — formal, acolhedor, direto..."></textarea>
+    <p class="example">Se deixar em branco, a IA usa um tom profissional e acolhedor por padrão.</p>
+    <div class="grid2">
+      <div><label for="f-cor">Cor principal da marca (opcional)</label><input type="text" id="f-cor" placeholder="#0D9488"></div>
+      <div><label for="f-logo">Link do logo (opcional)</label><input type="text" id="f-logo" placeholder="https://..."></div>
+    </div>
+  </section>
+
+  <!-- 2. Especialidades -->
+  <section class="section" data-section="especialidades">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <div class="section-titles">
+        <h2>Especialidades atendidas</h2>
+        <span class="who">🗂️ Recepção</span>
+      </div>
+    </div>
+    <label for="f-especialidades">Liste todas, separadas por vírgula</label>
+    <textarea id="f-especialidades" placeholder="Clínica Geral, Cardiologia, Nutrição"></textarea>
+  </section>
+
+  <!-- 3. Médicos -->
+  <section class="section" data-section="medicos">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <div class="section-titles">
+        <h2>Médicos</h2>
+        <span class="who">🩺 Médico(a)</span>
+      </div>
+    </div>
+    <p class="help">Sem isso, se um paciente perguntar "quem atende?" a IA escala pra um humano em vez de responder.</p>
+    <div id="lista-medicos"></div>
+    <button type="button" class="btn-add" data-add="medicos">+ Adicionar médico(a)</button>
+  </section>
+
+  <!-- 4. Serviços -->
+  <section class="section" data-section="servicos">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <div class="section-titles">
+        <h2>Serviços e preços</h2>
+        <span class="who">🗂️ Recepção</span>
+      </div>
+    </div>
+    <p class="help">A duração é só pra IA calcular horário na agenda — ela nunca informa isso pro paciente.</p>
+    <div id="lista-servicos"></div>
+    <button type="button" class="btn-add" data-add="servicos">+ Adicionar serviço</button>
+  </section>
+
+  <!-- 5. Horário -->
+  <section class="section" data-section="horario">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <div class="section-titles">
+        <h2>Horário de funcionamento</h2>
+        <span class="who">🗂️ Recepção</span>
+      </div>
+    </div>
+    <div id="lista-horario"></div>
+  </section>
+
+  <!-- 6. Convenios -->
+  <section class="section" data-section="convenios">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <div class="section-titles">
+        <h2>Convênios aceitos</h2>
+        <span class="who">🗂️ Recepção</span>
+      </div>
+    </div>
+    <label for="f-convenios">Liste todos, um por linha</label>
+    <textarea id="f-convenios" placeholder="Unimed
+Bradesco Saúde
+SulAmérica"></textarea>
+  </section>
+
+  <!-- 7. Pagamento -->
+  <section class="section" data-section="pagamento">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <div class="section-titles">
+        <h2>Formas de pagamento</h2>
+        <span class="who">🗂️ Recepção</span>
+      </div>
+    </div>
+    <textarea id="f-pagamento" placeholder="PIX, cartão de crédito/débito (até 3x sem juros), dinheiro..."></textarea>
+  </section>
+
+  <!-- 8. Cancelamento -->
+  <section class="section" data-section="cancelamento">
+    <div class="section-head">
+      <span class="section-num">08</span>
+      <div class="section-titles">
+        <h2>Política de cancelamento</h2>
+        <span class="who">🗂️ Recepção + 🩺 Médico(a)</span>
+      </div>
+    </div>
+    <textarea id="f-cancelamento" placeholder="Ex.: cancelamentos com menos de 4h de antecedência têm cobrança de 50% do valor."></textarea>
+  </section>
+
+  <!-- 9. Retorno -->
+  <section class="section" data-section="retorno">
+    <div class="section-head">
+      <span class="section-num">09</span>
+      <div class="section-titles">
+        <h2>Política de retorno</h2>
+        <span class="who">🩺 Médico(a)</span>
+      </div>
+    </div>
+    <p class="help">Pergunta frequente dos pacientes — preencher com atenção evita resposta genérica.</p>
+    <label class="radio-opt" data-retorno-opt="incluso"><input type="radio" name="retorno-tipo" value="incluso">O retorno já está incluso no valor da primeira consulta</label>
+    <label class="radio-opt" data-retorno-opt="cobranca"><input type="radio" name="retorno-tipo" value="cobranca">O retorno tem cobrança à parte</label>
+    <label class="radio-opt" data-retorno-opt="nao"><input type="radio" name="retorno-tipo" value="nao">Não fazemos consulta de retorno</label>
+    <div id="retorno-valor-wrap" hidden="">
+      <label for="f-retorno-valor">Valor cobrado no retorno (R$)</label>
+      <input type="text" id="f-retorno-valor" placeholder="120">
+    </div>
+    <label for="f-retorno-prazo">Em quanto tempo precisa acontecer</label>
+    <input type="text" id="f-retorno-prazo" placeholder="Ex.: em até 30 dias após a primeira consulta">
+  </section>
+
+  <!-- 10. Exigencias -->
+  <section class="section" data-section="exigencias">
+    <div class="section-head">
+      <span class="section-num">10</span>
+      <div class="section-titles">
+        <h2>Exigências especiais</h2>
+        <span class="who">🩺 Médico(a)</span>
+      </div>
+    </div>
+    <p class="help">Qualquer coisa que o paciente precise levar/ter antes de uma consulta específica.</p>
+    <textarea id="f-exigencias" placeholder="Ex.: primeira consulta de Cardiologia exige encaminhamento médico ou exames recentes (últimos 6 meses), se houver."></textarea>
+  </section>
+
+  <!-- 11. Exames inclusos -->
+  <section class="section" data-section="examesInclusos">
+    <div class="section-head">
+      <span class="section-num">11</span>
+      <div class="section-titles">
+        <h2>Exames ou benefícios inclusos</h2>
+        <span class="who">🩺 Médico(a)</span>
+      </div>
+    </div>
+    <textarea id="f-exames" placeholder="Ex.: a consulta de Cardiologia já inclui eletrocardiograma (ECG) sem custo adicional."></textarea>
+  </section>
+
+  <!-- 12. Condicoes comerciais -->
+  <section class="section" data-section="condicoesComerciais">
+    <div class="section-head">
+      <span class="section-num">12</span>
+      <div class="section-titles">
+        <h2>Condições comerciais e descontos</h2>
+        <span class="who">🗂️ Recepção</span>
+      </div>
+    </div>
+    <p class="help">Só o que a clínica de fato autoriza oferecer — a IA só usa isso quando o paciente reclamar do preço ou hesitar, nunca por conta própria.</p>
+    <div id="lista-condicoes"></div>
+    <button type="button" class="btn-add" data-add="condicoesComerciais">+ Adicionar condição</button>
+  </section>
+
+  <!-- 13. FAQ -->
+  <section class="section" data-section="faq">
+    <div class="section-head">
+      <span class="section-num">13</span>
+      <div class="section-titles">
+        <h2>Perguntas frequentes</h2>
+        <span class="who">🗂️ Recepção + 🩺 Médico(a)</span>
+      </div>
+    </div>
+    <p class="help">Endereço, estacionamento, documentos necessários — qualquer coisa que os pacientes sempre perguntam.</p>
+    <div id="lista-faq"></div>
+    <button type="button" class="btn-add" data-add="faq">+ Adicionar pergunta</button>
+  </section>
+
+</div>
+
+<div class="savebar">
+  <div class="savebar-inner">
+    <div class="save-status" id="save-status">Ainda não enviado.</div>
+    <button type="button" class="btn-save" id="btn-save">Salvar e enviar</button>
+  </div>
+</div>
+
+<script type="application/json" id="data-blob">{"identidade":{"nome":"","tomDeVoz":"","corPrimaria":"","logoUrl":""},"especialidades":"","medicos":[{"nome":"","especialidade":"","crm":""}],"servicos":[{"nome":"","preco":"","duracao":""}],"horario":{"seg":{"aberto":true,"abre":"08:00","fecha":"18:00"},"ter":{"aberto":true,"abre":"08:00","fecha":"18:00"},"qua":{"aberto":true,"abre":"08:00","fecha":"18:00"},"qui":{"aberto":true,"abre":"08:00","fecha":"18:00"},"sex":{"aberto":true,"abre":"08:00","fecha":"18:00"},"sab":{"aberto":false,"abre":"08:00","fecha":"12:00"},"dom":{"aberto":false,"abre":"08:00","fecha":"12:00"}},"convenios":"","pagamento":"","cancelamento":"","retorno":{"tipo":"","valorCobranca":"","prazo":""},"exigencias":"","examesInclusos":"","condicoesComerciais":[{"situacao":"","condicao":""}],"faq":[{"pergunta":"","resposta":""}],"meta":{"atualizadoEm":""}}</script>
+
+<script id="app-logic">
+(function(){
+
+  /* =======================================================================
+     CONFIGURAÇÃO — cole aqui a URL do seu Google Apps Script (termina em /exec).
+     O passo a passo no README explica como conseguir essa URL.
+     Enquanto estiver como "COLE_AQUI...", o site apenas salva no navegador
+     (localStorage) e avisa que o envio ainda não está configurado.
+     ======================================================================= */
+  var CONFIG = {
+    ENDPOINT: "https://script.google.com/macros/s/AKfycbwmmXfO6bpDllnSGehIB4GCBCIL1ilm6tokVMMBOLHV_18_u5ZRRyTfAXoqhd4YoahUQw/exec"
+  };
+
+  var STORAGE_KEY = "ficha-clinica-v1";
+
+  var DIAS = [["seg","Segunda"],["ter","Terça"],["qua","Quarta"],["qui","Quinta"],["sex","Sexta"],["sab","Sábado"],["dom","Domingo"]];
+
+  var DEFAULTS = JSON.parse(document.getElementById('data-blob').textContent);
+  var DATA = loadData();
+  var saving = false;
+
+  function loadData(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        return mergeDefaults(parsed, DEFAULTS);
+      }
+    }catch(e){}
+    return JSON.parse(JSON.stringify(DEFAULTS));
+  }
+
+  // Garante que campos novos existam mesmo em dados salvos antigos.
+  function mergeDefaults(obj, def){
+    if(Array.isArray(def)) return Array.isArray(obj) ? obj : JSON.parse(JSON.stringify(def));
+    if(def && typeof def === 'object'){
+      var out = {};
+      Object.keys(def).forEach(function(k){
+        out[k] = (obj && k in obj) ? mergeDefaults(obj[k], def[k]) : JSON.parse(JSON.stringify(def[k]));
+      });
+      // mantém chaves extras que já existiam
+      if(obj && typeof obj === 'object'){
+        Object.keys(obj).forEach(function(k){ if(!(k in out)) out[k] = obj[k]; });
+      }
+      return out;
+    }
+    return (obj===undefined || obj===null) ? def : obj;
+  }
+
+  function persistLocal(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
+  }
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+
+  function renderMedicos(){
+    var wrap = document.getElementById('lista-medicos');
+    wrap.innerHTML = '';
+    DATA.medicos.forEach(function(m, i){
+      var row = el('div','row-card');
+      row.innerHTML =
+        '<button type="button" class="row-remove" data-remove="medicos" data-idx="'+i+'" aria-label="Remover">×</button>'+
+        '<label>Nome completo</label><input type="text" class="m-nome" value="'+escAttr(m.nome)+'" placeholder="Dra. Camila Rocha">'+
+        '<div class="grid2">'+
+          '<div><label>Especialidade</label><input type="text" class="m-esp" value="'+escAttr(m.especialidade)+'" placeholder="Clínica Geral"></div>'+
+          '<div><label>CRM (opcional)</label><input type="text" class="m-crm" value="'+escAttr(m.crm)+'" placeholder="CRM/SP 123456"></div>'+
+        '</div>';
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderServicos(){
+    var wrap = document.getElementById('lista-servicos');
+    wrap.innerHTML = '';
+    DATA.servicos.forEach(function(s, i){
+      var row = el('div','row-card');
+      row.innerHTML =
+        '<button type="button" class="row-remove" data-remove="servicos" data-idx="'+i+'" aria-label="Remover">×</button>'+
+        '<div class="grid3">'+
+          '<div><label>Nome do serviço</label><input type="text" class="s-nome" value="'+escAttr(s.nome)+'" placeholder="Consulta Clínica Geral"></div>'+
+          '<div><label>Preço (R$)</label><input type="text" class="s-preco" value="'+escAttr(s.preco)+'" placeholder="250"></div>'+
+          '<div><label>Duração (min)</label><input type="text" class="s-dur" value="'+escAttr(s.duracao)+'" placeholder="30"></div>'+
+        '</div>';
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderCondicoes(){
+    var wrap = document.getElementById('lista-condicoes');
+    wrap.innerHTML = '';
+    DATA.condicoesComerciais.forEach(function(c, i){
+      var row = el('div','row-card');
+      row.innerHTML =
+        '<button type="button" class="row-remove" data-remove="condicoesComerciais" data-idx="'+i+'" aria-label="Remover">×</button>'+
+        '<label>Situação</label><input type="text" class="c-situacao" value="'+escAttr(c.situacao)+'" placeholder="Convênio não aceito">'+
+        '<label>Condição a oferecer</label><input type="text" class="c-condicao" value="'+escAttr(c.condicao)+'" placeholder="10% de desconto no particular à vista">';
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderFaq(){
+    var wrap = document.getElementById('lista-faq');
+    wrap.innerHTML = '';
+    DATA.faq.forEach(function(f, i){
+      var row = el('div','row-card');
+      row.innerHTML =
+        '<button type="button" class="row-remove" data-remove="faq" data-idx="'+i+'" aria-label="Remover">×</button>'+
+        '<label>Pergunta que os pacientes fazem</label><input type="text" class="q-pergunta" value="'+escAttr(f.pergunta)+'" placeholder="Qual o endereço da clínica?">'+
+        '<label>Resposta completa</label><textarea class="q-resposta" placeholder="Av. Paulista, 1000, sala 42...">'+escHtml(f.resposta)+'</textarea>';
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderHorario(){
+    var wrap = document.getElementById('lista-horario');
+    wrap.innerHTML = '';
+    DIAS.forEach(function(d){
+      var key = d[0], label = d[1];
+      var h = DATA.horario[key];
+      var row = el('div','day-row');
+      row.setAttribute('data-day', key);
+      row.innerHTML =
+        '<span class="day-name">'+label+'</span>'+
+        '<div class="day-times" '+(h.aberto ? '' : 'hidden')+'>'+
+          '<input type="time" class="h-abre" value="'+h.abre+'">'+
+          '<span style="color:var(--ink-faint);font-size:12px;">até</span>'+
+          '<input type="time" class="h-fecha" value="'+h.fecha+'">'+
+        '</div>'+
+        '<span class="closed-tag" '+(h.aberto ? 'hidden' : '')+'>fechado</span>'+
+        '<label class="day-closed-label"><input type="checkbox" class="h-fechado" '+(h.aberto ? '' : 'checked')+'> Fechado</label>';
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderRetorno(){
+    var opts = document.querySelectorAll('[data-retorno-opt]');
+    opts.forEach(function(o){
+      var val = o.getAttribute('data-retorno-opt');
+      var input = o.querySelector('input');
+      input.checked = (DATA.retorno.tipo === val);
+      o.classList.toggle('active', input.checked);
+    });
+    document.getElementById('retorno-valor-wrap').hidden = (DATA.retorno.tipo !== 'cobranca');
+    document.getElementById('f-retorno-valor').value = DATA.retorno.valorCobranca || '';
+    document.getElementById('f-retorno-prazo').value = DATA.retorno.prazo || '';
+  }
+
+  function renderSimpleFields(){
+    document.getElementById('f-nome').value = DATA.identidade.nome || '';
+    document.getElementById('f-tom').value = DATA.identidade.tomDeVoz || '';
+    document.getElementById('f-cor').value = DATA.identidade.corPrimaria || '';
+    document.getElementById('f-logo').value = DATA.identidade.logoUrl || '';
+    document.getElementById('f-especialidades').value = DATA.especialidades || '';
+    document.getElementById('f-convenios').value = DATA.convenios || '';
+    document.getElementById('f-pagamento').value = DATA.pagamento || '';
+    document.getElementById('f-cancelamento').value = DATA.cancelamento || '';
+    document.getElementById('f-exigencias').value = DATA.exigencias || '';
+    document.getElementById('f-exames').value = DATA.examesInclusos || '';
+    var titulo = DATA.identidade.nome ? DATA.identidade.nome : 'Dados da clínica';
+    document.getElementById('nome-clinica-titulo').textContent = titulo;
+  }
+
+  function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+  function escHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function filled(v){ return v!=null && String(v).trim().length>0; }
+
+  function sectionFilled(name){
+    switch(name){
+      case 'identidade': return filled(DATA.identidade.nome);
+      case 'especialidades': return filled(DATA.especialidades);
+      case 'medicos': return DATA.medicos.some(function(m){return filled(m.nome);});
+      case 'servicos': return DATA.servicos.some(function(s){return filled(s.nome);});
+      case 'horario': return true; // sempre tem valor padrão
+      case 'convenios': return filled(DATA.convenios);
+      case 'pagamento': return filled(DATA.pagamento);
+      case 'cancelamento': return filled(DATA.cancelamento);
+      case 'retorno': return filled(DATA.retorno.tipo);
+      case 'exigencias': return filled(DATA.exigencias);
+      case 'examesInclusos': return filled(DATA.examesInclusos);
+      case 'condicoesComerciais': return DATA.condicoesComerciais.some(function(c){return filled(c.situacao)||filled(c.condicao);});
+      case 'faq': return DATA.faq.some(function(f){return filled(f.pergunta);});
+    }
+    return false;
+  }
+
+  function updateProgress(){
+    var names = ['identidade','especialidades','medicos','servicos','horario','convenios','pagamento','cancelamento','retorno','exigencias','examesInclusos','condicoesComerciais','faq'];
+    var count = names.filter(sectionFilled).length;
+    document.getElementById('progress-label').textContent = count + ' de ' + names.length + ' seções';
+    document.getElementById('progress-fill').style.width = Math.round(count/names.length*100) + '%';
+  }
+
+  function renderAll(){
+    renderSimpleFields();
+    renderMedicos();
+    renderServicos();
+    renderCondicoes();
+    renderFaq();
+    renderHorario();
+    renderRetorno();
+    updateProgress();
+    if(DATA.meta && DATA.meta.atualizadoEm){
+      document.getElementById('save-status').innerHTML = 'Última atualização: <span class="ts">'+formatData(DATA.meta.atualizadoEm)+'</span>';
+    }
+  }
+
+  function formatData(iso){
+    try{
+      var d = new Date(iso);
+      return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    }catch(e){ return iso; }
+  }
+
+  function readFormIntoData(){
+    DATA.identidade.nome = document.getElementById('f-nome').value.trim();
+    DATA.identidade.tomDeVoz = document.getElementById('f-tom').value.trim();
+    DATA.identidade.corPrimaria = document.getElementById('f-cor').value.trim();
+    DATA.identidade.logoUrl = document.getElementById('f-logo').value.trim();
+    DATA.especialidades = document.getElementById('f-especialidades').value.trim();
+    DATA.convenios = document.getElementById('f-convenios').value.trim();
+    DATA.pagamento = document.getElementById('f-pagamento').value.trim();
+    DATA.cancelamento = document.getElementById('f-cancelamento').value.trim();
+    DATA.exigencias = document.getElementById('f-exigencias').value.trim();
+    DATA.examesInclusos = document.getElementById('f-exames').value.trim();
+
+    DATA.medicos = Array.prototype.map.call(document.querySelectorAll('#lista-medicos .row-card'), function(row){
+      return {
+        nome: row.querySelector('.m-nome').value.trim(),
+        especialidade: row.querySelector('.m-esp').value.trim(),
+        crm: row.querySelector('.m-crm').value.trim()
+      };
+    });
+    DATA.servicos = Array.prototype.map.call(document.querySelectorAll('#lista-servicos .row-card'), function(row){
+      return {
+        nome: row.querySelector('.s-nome').value.trim(),
+        preco: row.querySelector('.s-preco').value.trim(),
+        duracao: row.querySelector('.s-dur').value.trim()
+      };
+    });
+    DATA.condicoesComerciais = Array.prototype.map.call(document.querySelectorAll('#lista-condicoes .row-card'), function(row){
+      return {
+        situacao: row.querySelector('.c-situacao').value.trim(),
+        condicao: row.querySelector('.c-condicao').value.trim()
+      };
+    });
+    DATA.faq = Array.prototype.map.call(document.querySelectorAll('#lista-faq .row-card'), function(row){
+      return {
+        pergunta: row.querySelector('.q-pergunta').value.trim(),
+        resposta: row.querySelector('.q-resposta').value.trim()
+      };
+    });
+
+    DIAS.forEach(function(d){
+      var key = d[0];
+      var row = document.querySelector('.day-row[data-day="'+key+'"]');
+      var fechado = row.querySelector('.h-fechado').checked;
+      DATA.horario[key] = {
+        aberto: !fechado,
+        abre: row.querySelector('.h-abre').value || '08:00',
+        fecha: row.querySelector('.h-fecha').value || '18:00'
+      };
+    });
+
+    var tipoEl = document.querySelector('input[name="retorno-tipo"]:checked');
+    DATA.retorno.tipo = tipoEl ? tipoEl.value : '';
+    DATA.retorno.valorCobranca = document.getElementById('f-retorno-valor').value.trim();
+    DATA.retorno.prazo = document.getElementById('f-retorno-prazo').value.trim();
+  }
+
+  var endpointConfigurado = function(){
+    return CONFIG.ENDPOINT && CONFIG.ENDPOINT.indexOf('http') === 0;
+  };
+
+  async function salvar(){
+    if(saving) return;
+    saving = true;
+    var btn = document.getElementById('btn-save');
+    var status = document.getElementById('save-status');
+    btn.disabled = true; btn.classList.remove('saved');
+
+    readFormIntoData();
+    DATA.meta.atualizadoEm = new Date().toISOString();
+    updateProgress();
+    persistLocal();
+
+    // Sem endpoint configurado: salva só localmente e avisa.
+    if(!endpointConfigurado()){
+      btn.textContent = 'Salvo no navegador';
+      btn.classList.add('saved');
+      status.innerHTML = 'Salvo neste aparelho. <span style="color:var(--warn)">Envio para a planilha ainda não configurado.</span>';
+      finalizar(btn);
+      return;
+    }
+
+    btn.textContent = 'Enviando...';
+    try{
+      // Content-Type text/plain evita o preflight de CORS do navegador.
+      var resp = await fetch(CONFIG.ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(DATA)
+      });
+      var ok = resp && resp.ok;
+      var json = null;
+      try{ json = await resp.json(); }catch(e){}
+      if(ok && (!json || json.result !== 'error')){
+        btn.textContent = 'Enviado ✓'; btn.classList.add('saved');
+        status.innerHTML = 'Enviado para a planilha: <span class="ts">'+formatData(DATA.meta.atualizadoEm)+'</span>';
+      }else{
+        throw new Error('resposta-invalida');
+      }
+    }catch(e){
+      // O envio pode ter chegado mesmo assim (bloqueio de leitura por CORS),
+      // mas por segurança avisamos que não deu para confirmar.
+      btn.textContent = 'Não confirmou — toque p/ tentar';
+      status.innerHTML = 'Salvo neste aparelho, mas não consegui confirmar o envio. Tente de novo em alguns segundos.';
+    }finally{
+      finalizar(btn);
+    }
+  }
+
+  function finalizar(btn){
+    saving = false;
+    setTimeout(function(){
+      if(!saving){
+        btn.disabled=false;
+        if(btn.textContent==='Enviado ✓' || btn.textContent==='Salvo no navegador') btn.textContent='Salvar e enviar';
+      }
+    }, 1600);
+  }
+
+  document.addEventListener('click', function(e){
+    var addBtn = e.target.closest('[data-add]');
+    if(addBtn){
+      var kind = addBtn.getAttribute('data-add');
+      if(kind==='medicos') DATA.medicos.push({nome:'',especialidade:'',crm:''});
+      if(kind==='servicos') DATA.servicos.push({nome:'',preco:'',duracao:''});
+      if(kind==='condicoesComerciais') DATA.condicoesComerciais.push({situacao:'',condicao:''});
+      if(kind==='faq') DATA.faq.push({pergunta:'',resposta:''});
+      if(kind==='medicos') renderMedicos();
+      if(kind==='servicos') renderServicos();
+      if(kind==='condicoesComerciais') renderCondicoes();
+      if(kind==='faq') renderFaq();
+      return;
+    }
+    var rmBtn = e.target.closest('[data-remove]');
+    if(rmBtn){
+      var rkind = rmBtn.getAttribute('data-remove');
+      var idx = Number(rmBtn.getAttribute('data-idx'));
+      // guarda o que está digitado antes de re-renderizar
+      readFormIntoData();
+      DATA[rkind].splice(idx,1);
+      if(DATA[rkind].length===0){
+        if(rkind==='medicos') DATA.medicos.push({nome:'',especialidade:'',crm:''});
+        if(rkind==='servicos') DATA.servicos.push({nome:'',preco:'',duracao:''});
+        if(rkind==='condicoesComerciais') DATA.condicoesComerciais.push({situacao:'',condicao:''});
+        if(rkind==='faq') DATA.faq.push({pergunta:'',resposta:''});
+      }
+      if(rkind==='medicos') renderMedicos();
+      if(rkind==='servicos') renderServicos();
+      if(rkind==='condicoesComerciais') renderCondicoes();
+      if(rkind==='faq') renderFaq();
+      persistLocal();
+      return;
+    }
+    var radioLabel = e.target.closest('[data-retorno-opt]');
+    if(radioLabel){
+      setTimeout(function(){
+        DATA.retorno.tipo = radioLabel.getAttribute('data-retorno-opt');
+        renderRetorno();
+        persistLocal();
+      }, 0);
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if(e.target.classList.contains('h-fechado')){
+      var row = e.target.closest('.day-row');
+      var fechado = e.target.checked;
+      row.querySelector('.day-times').hidden = fechado;
+      row.querySelector('.closed-tag').hidden = !fechado;
+    }
+  });
+
+  // salva no navegador conforme a pessoa digita (leve, sem enviar)
+  var autoTimer = null;
+  document.addEventListener('input', function(){
+    clearTimeout(autoTimer);
+    autoTimer = setTimeout(function(){
+      readFormIntoData();
+      updateProgress();
+      persistLocal();
+      var titulo = DATA.identidade.nome ? DATA.identidade.nome : 'Dados da clínica';
+      document.getElementById('nome-clinica-titulo').textContent = titulo;
+    }, 400);
+  });
+
+  document.getElementById('btn-save').addEventListener('click', salvar);
+
+  renderAll();
+})();
+</script>
+
+</body></html>
